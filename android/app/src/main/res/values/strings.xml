@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Ragnatela</string>
+    <string name="goleft"><![CDATA[<]]></string>
+    <string name="goright"><![CDATA[>]]></string>
+</resources>

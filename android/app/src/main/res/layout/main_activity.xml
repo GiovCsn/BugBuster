@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+
+    <TextView
+        android:visibility="invisible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Server IP address and port" />
+
+    <LinearLayout
+        android:visibility="invisible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/first_byte_ip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="192"
+            android:text="192"
+            android:inputType="number" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="." />
+
+        <EditText
+            android:id="@+id/second_byte_ip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="168"
+            android:text="168"
+            android:inputType="number" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="." />
+
+        <EditText
+            android:id="@+id/third_byte_ip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="1"
+            android:text="1"
+            android:inputType="number" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="." />
+
+        <EditText
+            android:id="@+id/fourth_byte_ip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="32"
+            android:text="71"
+            android:inputType="number" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=":" />
+
+        <EditText
+            android:id="@+id/host_port"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="8080"
+            android:text="8080"
+            android:inputType="number" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/life"
+            android:text="0"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/score"
+            android:text="0"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/set_display_pixels"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Random Display colors"
+        android:layout_marginTop="50dp"
+        android:textSize="22sp" />
+
+
+    <Button
+        android:id="@+id/highlight_components_button"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_marginTop="50dp"
+        android:text="Highlight components"
+        android:textSize="22sp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/move_backward_button"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:text="@string/goleft"
+            android:textSize="22sp" />
+
+        <View
+            android:layout_width="96dp"
+            android:layout_height="match_parent" />
+
+        <Button
+            android:id="@+id/move_forward_button"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:text="@string/goright"
+            android:textSize="22sp" />
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/random_colors"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_marginTop="50dp"
+        android:text="Random colors"
+        android:textSize="22sp" />
+
+</LinearLayout>
