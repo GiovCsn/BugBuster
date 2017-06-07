@@ -1,2 +1,3 @@
 ### Repository del progetto BugBuster
-Presto aggiungerò più dettagli possibile...
+Per far partire il progetto potete seguire le istruzioni presenti nel file `README-jetmir.md`. <br>
+Ulteriori dettagli li inserirÃ² in seguito ;)
