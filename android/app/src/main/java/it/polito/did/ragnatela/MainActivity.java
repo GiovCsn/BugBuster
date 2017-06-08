@@ -32,6 +32,7 @@ import butterknife.BindViews;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import me.angrybyte.circularslider.CircularSlider;
 
 public class MainActivity extends Activity {
 
@@ -72,6 +73,8 @@ public class MainActivity extends Activity {
     // EDIT
     TextView life;
     TextView score;
+    TextView angle;
+    CircularSlider cSlider;
     Ragno ragno = new Ragno();
     ArrayList<int[]> pixels;
 
@@ -81,6 +84,8 @@ public class MainActivity extends Activity {
     TimerTask timerTask;
     Timer timerBug;
     TimerTask timerTaskBug;
+    Timer timerSpider;
+    TimerTask timerTaskSpider;
     final Handler handler = new Handler();
 
     @Override
@@ -89,41 +94,45 @@ public class MainActivity extends Activity {
         setContentView(R.layout.main_activity);
         unbinder = ButterKnife.bind(this);
 
-//        set_display_pixels.setEnabled(false);
-//        randomColors.setEnabled(false);
-//        moveBackwardButton.setEnabled(false);
-//        moveForwardButton.setEnabled(false);
-//        changeColorButton.setEnabled(false);
-//
-//        myIpTextWatcher = new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//
-//                if (checkCorrectIp()) {
-//                    moveBackwardButton.setEnabled(true);
-//                    moveForwardButton.setEnabled(true);
-//                    randomColors.setEnabled(true);
-//                    set_display_pixels.setEnabled(true);
-//                    changeColorButton.setEnabled(true);
-//                    Message msg = mNetworkHandler.obtainMessage();
-//                    msg.what = NetworkThread.SET_SERVER_DATA;
-//                    msg.obj = host_url;
-//                    msg.arg1 = host_port;
-//                    msg.sendToTarget();
-//
-//                    handleNetworkRequest(NetworkThread.SET_SERVER_DATA, host_url, host_port ,0);
-//                }
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//            }
-//        };
+        cSlider = (CircularSlider) findViewById(R.id.circular);
+
+        cSlider.setEnabled(false);
+        set_display_pixels.setEnabled(false);
+        randomColors.setEnabled(false);
+        moveBackwardButton.setEnabled(false);
+        moveForwardButton.setEnabled(false);
+        changeColorButton.setEnabled(false);
+
+        myIpTextWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                if (checkCorrectIp()) {
+                    cSlider.setEnabled(true);
+                    moveBackwardButton.setEnabled(true);
+                    moveForwardButton.setEnabled(true);
+                    randomColors.setEnabled(true);
+                    set_display_pixels.setEnabled(true);
+                    changeColorButton.setEnabled(true);
+                    Message msg = mNetworkHandler.obtainMessage();
+                    msg.what = NetworkThread.SET_SERVER_DATA;
+                    msg.obj = host_url;
+                    msg.arg1 = host_port;
+                    msg.sendToTarget();
+
+                    handleNetworkRequest(NetworkThread.SET_SERVER_DATA, host_url, host_port ,0);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        };
 
         for (EditText ip_byte : ip_address_bytes) {
             ip_byte.addTextChangedListener(myIpTextWatcher);
@@ -143,15 +152,33 @@ public class MainActivity extends Activity {
         startHandlerThread();
 
         // EDIT
+
         life = (TextView) findViewById(R.id.life);
         score = (TextView) findViewById(R.id.score);
+        angle = (TextView) findViewById(R.id.angle);
         startHandlerBugThread();
         startTimer();
         startTimerBug();
         pixels = loadPixels();
         setDisplayPixels();
+        startTimerSpider();
         life.setText(String.valueOf(ragno.getLifebar()));
         score.setText(String.valueOf(ragno.getScore()));
+
+        cSlider.setOnSliderMovedListener(new CircularSlider.OnSliderMovedListener() {
+            @Override
+            public void onSliderMoved(double pos) {
+                double posNorm = Math.toDegrees(pos*(2 * Math.PI));
+                if(posNorm < 0) {
+                    posNorm = posNorm * (-1);
+                } else {
+                    posNorm = 360 - posNorm;
+                }
+                angle.setText(String.valueOf(posNorm));
+                ragno.setAngle(Math.toRadians(posNorm));
+                //setDisplayPixels();
+            }
+        });
     }
 
     public void startHandlerThread() {
@@ -249,6 +276,14 @@ public class MainActivity extends Activity {
                 bugNetworkHandler = null;
             }
         }
+
+        timerTask.cancel();
+        timerTaskBug.cancel();
+        timerTaskSpider.cancel();
+        timer.cancel();
+        timerBug.cancel();
+        timerSpider.cancel();
+
     }
 
     @OnClick(R.id.random_colors)
@@ -437,18 +472,29 @@ public class MainActivity extends Activity {
         JSONArray pixels_array = preparePixelsArray();
         try {
             for(Bug bug : buglist) {
-                ((JSONObject) pixels_array.get(bug.getPos1())).put("r", 0);
-                ((JSONObject) pixels_array.get(bug.getPos1())).put("g", 255);
-                ((JSONObject) pixels_array.get(bug.getPos1())).put("b", 0);
-                ((JSONObject) pixels_array.get(bug.getPos2())).put("r", 0);
-                ((JSONObject) pixels_array.get(bug.getPos2())).put("g", 255);
-                ((JSONObject) pixels_array.get(bug.getPos2())).put("b", 0);
-                ((JSONObject) pixels_array.get(bug.getPos1() - 1)).put("r", 0);
-                ((JSONObject) pixels_array.get(bug.getPos1() - 1)).put("g", 255);
-                ((JSONObject) pixels_array.get(bug.getPos1() - 1)).put("b", 0);
-                ((JSONObject) pixels_array.get(bug.getPos2() + 1)).put("r", 0);
-                ((JSONObject) pixels_array.get(bug.getPos2() + 1)).put("g", 255);
-                ((JSONObject) pixels_array.get(bug.getPos2() + 1)).put("b", 0);
+                int[] colors = new int[3];
+                if(bug.getType() == 0) {
+                    colors[0] = 0;    // R
+                    colors[1] = 255;  // G
+                    colors[2] = 0;    // B
+                }else {
+                    colors[0] = 255;
+                    colors[1] = 0;
+                    colors[2] = 255;
+                }
+
+                ((JSONObject) pixels_array.get(bug.getPos1())).put("r", colors[0]);
+                ((JSONObject) pixels_array.get(bug.getPos1())).put("g", colors[1]);
+                ((JSONObject) pixels_array.get(bug.getPos1())).put("b", colors[2]);
+                ((JSONObject) pixels_array.get(bug.getPos2())).put("r", colors[0]);
+                ((JSONObject) pixels_array.get(bug.getPos2())).put("g", colors[1]);
+                ((JSONObject) pixels_array.get(bug.getPos2())).put("b", colors[2]);
+                ((JSONObject) pixels_array.get(bug.getPos1() - 1)).put("r", colors[0]);
+                ((JSONObject) pixels_array.get(bug.getPos1() - 1)).put("g", colors[1]);
+                ((JSONObject) pixels_array.get(bug.getPos1() - 1)).put("b", colors[2]);
+                ((JSONObject) pixels_array.get(bug.getPos2() + 1)).put("r", colors[0]);
+                ((JSONObject) pixels_array.get(bug.getPos2() + 1)).put("g", colors[1]);
+                ((JSONObject) pixels_array.get(bug.getPos2() + 1)).put("b", colors[2]);
             }
             handleNetworkRequest(bugNetworkHandler, NetworkThread.SET_PIXELS, pixels_array, 0 ,0);
         } catch (Exception e) {
@@ -510,7 +556,8 @@ public class MainActivity extends Activity {
         }
     }
 
-    public void startTimer() { // Timer per aggiornamento delle posizioni dei Bug
+    // Timer per aggiornamento delle posizioni dei Bug
+    public void startTimer() {
         //set a new Timer
         timer = new Timer();
 
@@ -539,12 +586,13 @@ public class MainActivity extends Activity {
                         score.setText(String.valueOf(ragno.getScore()));
                     }
                 });
-                
+
             }
         };
     }
 
-    public void startTimerBug() {  // Timer per la creazione di nuovi Bug
+    // Timer per la creazione di nuovi Bug
+    public void startTimerBug() {
         //set a new Timer
         timerBug = new Timer();
 
@@ -552,12 +600,12 @@ public class MainActivity extends Activity {
         initializeTimerTaskBug();
 
         //schedule the timer, after the first 5000ms the TimerTask will run every 10000ms
-        timerBug.schedule(timerTask, 0, 5000); //
+        timerBug.schedule(timerTaskBug, 0, 5000); //
     }
 
     public void initializeTimerTaskBug() {
 
-        timerTask = new TimerTask() {
+        timerTaskBug = new TimerTask() {
             public void run() {
 
                 Bug bug = new Bug();
@@ -566,4 +614,26 @@ public class MainActivity extends Activity {
         };
     }
 
+    // Timer per aggiornamento dell'angolo del ragno
+    public void startTimerSpider() {
+        //set a new Timer
+        timerSpider = new Timer();
+
+        //initialize the TimerTask's job
+        initializeTimerTaskSpider();
+
+        //schedule the timer, after the first 5000ms the TimerTask will run every 10000ms
+        timerSpider.schedule(timerTaskSpider, 0, 500); //
+    }
+
+    public void initializeTimerTaskSpider() {
+
+        timerTaskSpider = new TimerTask() {
+            public void run() {
+
+                setDisplayPixels();
+
+            }
+        };
+    }
 }

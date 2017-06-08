@@ -54,8 +54,17 @@ public class Bug {
         step = 1;
         toCheck = false;
         alive = true;
-        type = 0;
+
+        double resType = Math.random();
+        if(resType <= 0.2) {
+            type = 1;
+        } else {
+            type = 0;
+        }
+
     }
+
+    public int getType() { return type; }
 
     public int getTirante() {
         return tirante;

@@ -21,6 +21,8 @@ public class Ragno {
         return angle;
     }
 
+    public void setAngle(double angle) { this.angle = angle; }
+
     public void update(double increment) {
         angle += increment;
         if(angle > (Math.PI * 2)) {
@@ -29,7 +31,7 @@ public class Ragno {
     }
 
     public void hit() {
-        lifebar -= 10;
+        lifebar -= 5;
     }
 
     public void upScore() {
