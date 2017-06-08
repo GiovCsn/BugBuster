@@ -1,2 +1,4 @@
 ### Repository del progetto BugBuster
-Presto aggiunger� pi� dettagli possibile...
+Seguendo le istruzioni presenti nel file `README-jetmir.md` dovreste riuscire ad aprire una pagina web `127.0.0.1:8080` nella quale è presente l'interfaccia del simulatore, ovvero la rappresentazione della ragnatela. <br>
+In alto a sinistra di questa pagina è presente un indirizzo IP, che molto probabilmente sarà diverso sa quello impostato di default dell'app. Per far sì che l'app comunichi col simulatore è necessario verificare che l'IP visualizato in `127.0.0.1:8080` e quello impostato nell'app siano gli stessi: <br>
+Una volta aperta la pagina del simulatore e visualizzato l'IP, andate quindi su Android Studio e aprite il file `main_activity.xml`. Dalla riga 23 alla riga 81 troverete dei tag EditText che al loro interno hanno definito un attributo text (come nel caso della riga 28 `android:text="192"`). Quindi l'indirizzo che userà l'app sarà quello definito nei campi text di questi EditText (al momento sono nelle righe 28, 41, 54, 67 e 80).
