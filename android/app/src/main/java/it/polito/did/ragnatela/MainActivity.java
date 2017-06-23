@@ -38,7 +38,8 @@ public class MainActivity extends Activity {
 
     Unbinder unbinder;
 
-    private String host_url = "192.168.1.71";
+    //private String host_url;// = "192.168.1.71";
+    private static String host_url;
     private int host_port = 8080;
 
     @BindView(R.id.set_display_pixels)
@@ -94,6 +95,8 @@ public class MainActivity extends Activity {
         setContentView(R.layout.main_activity);
         unbinder = ButterKnife.bind(this);
 
+        Bundle extras = getIntent().getExtras();
+        host_url = extras.getString("ip");// = "192.168.1.71";
         cSlider = (CircularSlider) findViewById(R.id.circular);
 
         cSlider.setEnabled(false);
@@ -125,7 +128,10 @@ public class MainActivity extends Activity {
                     msg.arg1 = host_port;
                     msg.sendToTarget();
 
+
+
                     handleNetworkRequest(NetworkThread.SET_SERVER_DATA, host_url, host_port ,0);
+
                 }
             }
 
@@ -157,11 +163,12 @@ public class MainActivity extends Activity {
         score = (TextView) findViewById(R.id.score);
         angle = (TextView) findViewById(R.id.angle);
         startHandlerBugThread();
+
         startTimer();
         startTimerBug();
+        startTimerSpider();
         pixels = loadPixels();
         setDisplayPixels();
-        startTimerSpider();
         life.setText(String.valueOf(ragno.getLifebar()));
         score.setText(String.valueOf(ragno.getScore()));
 
@@ -623,7 +630,7 @@ public class MainActivity extends Activity {
         initializeTimerTaskSpider();
 
         //schedule the timer, after the first 5000ms the TimerTask will run every 10000ms
-        timerSpider.schedule(timerTaskSpider, 0, 500); //
+        timerSpider.schedule(timerTaskSpider, 0, 300); //
     }
 
     public void initializeTimerTaskSpider() {
@@ -635,5 +642,9 @@ public class MainActivity extends Activity {
 
             }
         };
+    }
+
+    public static String getHost_url() {
+        return host_url;
     }
 }

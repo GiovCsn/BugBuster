@@ -10,6 +10,68 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="it.polito.did.ragnatela.MenuActivity">
 
+    <LinearLayout
+        android:visibility="visible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/first_byte_ip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="192"
+            android:inputType="number" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="." />
+
+        <EditText
+            android:id="@+id/second_byte_ip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="168"
+            android:inputType="number" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="." />
+
+        <EditText
+            android:id="@+id/third_byte_ip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="1"
+            android:inputType="number" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="." />
+
+        <EditText
+            android:id="@+id/fourth_byte_ip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="32"
+            android:inputType="number" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=":" />
+
+        <EditText
+            android:id="@+id/host_port"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="8080"
+            android:inputType="number" />
+
+    </LinearLayout>
     <Button
         android:layout_centerVertical="true"
         android:paddingTop="30dp"

@@ -84,14 +84,17 @@ public class Bug {
         this.pos2 = pos;
     }
 
+    public void setToCheck(boolean toCheck) {
+        this.toCheck = toCheck;
+    }
+
     public void update() {
         if(isAlive()) {
             this.pos1 = this.pos1 + step;
             this.pos2 = this.pos2 - step;
-            if ((this.pos1 >= lifespan-step) || (this.pos2 <= step)) {
-                toCheck = true;
-            }
+
             if ((this.pos1 >= lifespan) || (this.pos2 <= 0)) {
+                toCheck = true;
                 kill();
             }
         }
