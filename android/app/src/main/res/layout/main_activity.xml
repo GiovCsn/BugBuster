@@ -1,11 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:circular="http://schemas.android.com/apk/res-auto"
-    android:gravity="center_horizontal"
-    android:orientation="vertical"
-    android:padding="20dp">
+    android:background="#cbcccb">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/ragno"
+        android:id="@+id/ragno"
+        android:layout_margin="10dp"/>
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/ic_launcher"
+        android:id="@+id/P_Up"
+        android:layout_gravity="right"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="15dp"
+        android:layout_marginRight="20dp"/>
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_alignParentRight="true"
+        android:id="@+id/progressBar"
+        android:layout_toRightOf="@+id/ragno"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="20dp"
+        android:scaleY="8"/>
+
+
+    <RelativeLayout
+        android:id="@+id/circularSliderLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="70dp">
+
+        <TextView
+            android:text="0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/score"
+            android:textSize="34sp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"/>
+
+        <me.angrybyte.circularslider.CircularSlider
+            android:id="@+id/circular"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="35dp"
+            circular:angle="1.57"
+            circular:border_color="#ffffff"
+            circular:border_thickness="50dp"
+            circular:thumb_color="#d44f4f"
+            circular:thumb_size="30dp" />
+
+    </RelativeLayout>
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@mipmap/pause_red"
+        android:layout_alignBottom="@id/circularSliderLayout"
+        android:layout_centerHorizontal="true"
+        android:minWidth="50dp"
+        android:minHeight="50dp"
+        android:layout_marginBottom="10dp"
+        android:id="@+id/pauseButton"
+        />
+
+    <RelativeLayout
+        android:id="@+id/bestScoreLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="20dp">
+
+        <TextView
+            android:text="Best score:"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/bestScore"
+            android:textSize="18sp"
+            android:layout_centerHorizontal="true"/>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/bestScore"
+            android:layout_marginLeft="20dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/black_score"
+                android:id="@+id/circleScore"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"/>
+
+            <TextView
+                android:text="125"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/numberBestScore"
+                android:textSize="18sp"
+                android:textColor="#ffffff"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"/>
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
 
 
     <TextView
@@ -80,7 +194,8 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="invisible">
 
         <TextView
             android:id="@+id/life"
@@ -88,7 +203,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
         <TextView
-            android:id="@+id/score"
+            android:id="@+id/scoreNumber"
             android:text="0"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
@@ -101,7 +216,7 @@
 
     </LinearLayout>
 
-    <me.angrybyte.circularslider.CircularSlider
+    <!--<me.angrybyte.circularslider.CircularSlider
         android:id="@+id/circular"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -110,7 +225,7 @@
         circular:border_color="#505090"
         circular:border_thickness="14dp"
         circular:thumb_color="#30AEFF"
-        circular:thumb_size="24dp" />
+        circular:thumb_size="24dp" />-->
 
     <Button
         android:id="@+id/set_display_pixels"
@@ -118,7 +233,9 @@
         android:layout_height="wrap_content"
         android:text="Random Display colors"
         android:layout_marginTop="50dp"
-        android:textSize="22sp" />
+        android:textSize="22sp"
+        android:visibility="invisible"
+        />
 
 
     <Button
@@ -127,31 +244,36 @@
         android:layout_height="48dp"
         android:layout_marginTop="50dp"
         android:text="Highlight components"
-        android:textSize="22sp" />
+        android:textSize="22sp"
+        android:visibility="invisible"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="invisible">
 
         <Button
             android:id="@+id/move_backward_button"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:text="@string/goleft"
-            android:textSize="22sp" />
+            android:textSize="22sp"
+            android:visibility="invisible"/>
 
         <View
             android:layout_width="96dp"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:visibility="invisible"/>
 
         <Button
             android:id="@+id/move_forward_button"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:text="@string/goright"
-            android:textSize="22sp" />
+            android:textSize="22sp"
+            android:visibility="invisible"/>
     </LinearLayout>
 
 
@@ -161,6 +283,7 @@
         android:layout_height="48dp"
         android:layout_marginTop="50dp"
         android:text="Random colors"
-        android:textSize="22sp" />
+        android:textSize="22sp"
+        android:visibility="invisible"/>
 
-</LinearLayout>
+</RelativeLayout>

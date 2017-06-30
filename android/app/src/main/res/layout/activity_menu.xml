@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_menu"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="16dp"
+    android:background="#cbcccb"
     tools:context="it.polito.did.ragnatela.MenuActivity">
 
     <LinearLayout
@@ -72,7 +74,7 @@
             android:inputType="number" />
 
     </LinearLayout>
-    <Button
+   <!-- <Button
         android:layout_centerVertical="true"
         android:paddingTop="30dp"
         android:paddingBottom="30dp"
@@ -81,6 +83,75 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Start Game"
-        android:textSize="30sp"/>
+        android:textSize="30sp"/>-->
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:weightSum="1"
+        >
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:srcCompat="@mipmap/logo"
+            android:id="@+id/imageView"
+            android:layout_weight="0.7"
+            android:layout_marginTop="30dp"/>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.3">
+
+
+            <Button
+                android:text="Resume"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/resumeButton"
+                android:layout_weight="0.25"
+                android:backgroundTint="#d44f4f"
+                android:textColor="#ffffff"
+                android:textSize="20sp"
+                android:layout_marginRight="90dp"
+                android:layout_marginLeft="90dp"/>
+
+            <Button
+                android:text="New Game"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/start_game"
+                android:layout_weight="0.25"
+                android:backgroundTint="#d44f4f"
+                android:textColor="#ffffff"
+                android:textSize="20sp"
+                android:layout_marginRight="90dp"
+                android:layout_marginLeft="90dp"/>
+
+            <Button
+                android:text="Exit"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/exitButton"
+                android:layout_weight="0.25"
+                android:backgroundTint="#d44f4f"
+                android:textColor="#ffffff"
+                android:textSize="20sp"
+                android:layout_marginRight="90dp"
+                android:layout_marginLeft="90dp"/>
+        </LinearLayout>
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@mipmap/sound_on_0"
+            android:id="@+id/soundOnButton"
+            android:layout_weight="0.25"
+            android:background="@null" />
+    </LinearLayout>
 
 </RelativeLayout>
+
+

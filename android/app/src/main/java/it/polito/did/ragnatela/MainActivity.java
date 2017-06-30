@@ -1,17 +1,24 @@
 package it.polito.did.ragnatela;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Menu;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,6 +58,9 @@ public class MainActivity extends Activity {
     @BindView(R.id.move_backward_button)
     Button moveBackwardButton;
 
+    @BindView(R.id.P_Up)
+    ImageButton P_Up;
+
     @BindView(R.id.move_forward_button)
     Button moveForwardButton;
 
@@ -78,6 +88,12 @@ public class MainActivity extends Activity {
     CircularSlider cSlider;
     Ragno ragno = new Ragno();
     ArrayList<int[]> pixels;
+    int ringCount = 522;
+    boolean powerup = false;
+
+    ImageButton pause;
+    //public static MediaPlayer resourcePlayer;
+
 
     ArrayList<Bug> buglist = new ArrayList<Bug>();
 
@@ -105,6 +121,8 @@ public class MainActivity extends Activity {
         moveBackwardButton.setEnabled(false);
         moveForwardButton.setEnabled(false);
         changeColorButton.setEnabled(false);
+        P_Up.setEnabled(false);
+
 
         myIpTextWatcher = new TextWatcher() {
             @Override
@@ -127,8 +145,6 @@ public class MainActivity extends Activity {
                     msg.obj = host_url;
                     msg.arg1 = host_port;
                     msg.sendToTarget();
-
-
 
                     handleNetworkRequest(NetworkThread.SET_SERVER_DATA, host_url, host_port ,0);
 
@@ -186,6 +202,27 @@ public class MainActivity extends Activity {
                 //setDisplayPixels();
             }
         });
+
+        pauseGame();
+    }
+
+    private void pauseGame(){
+
+        pause = (ImageButton)findViewById(R.id.pauseButton);
+        pause.setOnClickListener(new View.OnClickListener()
+        {
+            public void onClick (View v){
+                Intent intent = new Intent(getApplicationContext(), MenuActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                startActivity(intent);
+                if(MenuActivity.sharedPref.getBoolean("MUSIC", true)){
+                    MenuActivity.resourcePlayer = MediaPlayer.create(getApplicationContext(),R.raw.opening);
+                    MenuActivity.resourcePlayer.start();
+                    MenuActivity.resourcePlayer.setLooping(true);
+                }
+            }
+        });
+
     }
 
     public void startHandlerThread() {
@@ -223,8 +260,11 @@ public class MainActivity extends Activity {
             return false;
     }
 
+
+
     //from http://stackoverflow.com/questions/4581877/validating-ipv4-string-in-java
     public static boolean validIP(String ip) {
+
         try {
             if (ip == null || ip.isEmpty()) {
                 return false;
@@ -240,6 +280,7 @@ public class MainActivity extends Activity {
                 if ((i < 0) || (i > 255)) {
                     return false;
                 }
+
             }
             if (ip.endsWith(".")) {
                 return false;
@@ -432,10 +473,10 @@ public class MainActivity extends Activity {
                     tmp.put("g", 0);
                     tmp.put("b", 0);
                     tmp.put("r", 0);
-                } else if (i < 613) {
-                    tmp.put("r", 255);
+                } else if (i < 612) {
+                    tmp.put("r", 0);
                     tmp.put("g", 0);
-                    tmp.put("b", 255);
+                    tmp.put("b", 0);
                 } else if (i < 791) {
                     tmp.put("b", 0);
                     tmp.put("g", 0);
@@ -478,6 +519,13 @@ public class MainActivity extends Activity {
     void showBug() {
         JSONArray pixels_array = preparePixelsArray();
         try {
+
+            for(int j=522; j< ringCount; j++) {
+                ((JSONObject) pixels_array.get(j)).put("r", 0);
+                ((JSONObject) pixels_array.get(j)).put("g", 0);
+                ((JSONObject) pixels_array.get(j)).put("b", 255);
+            }
+
             for(Bug bug : buglist) {
                 int[] colors = new int[3];
                 if(bug.getType() == 0) {
@@ -555,9 +603,14 @@ public class MainActivity extends Activity {
                     break;
             }
             if(eated) {
+                // final MediaPlayer gotit = MediaPlayer.create(this,R.raw.eated);
+                //gotit.start();
                 ragno.upScore();
+                ring1();
             }
             else {
+                // final MediaPlayer hurt = MediaPlayer.create(this,R.raw.hit);
+                //hurt.start();
                 ragno.hit();
             }
         }
@@ -576,6 +629,7 @@ public class MainActivity extends Activity {
     }
 
     public void initializeTimerTask() {
+        // final MediaPlayer step = MediaPlayer.create(this,R.raw.step);
 
         timerTask = new TimerTask() {
             public void run() {
@@ -586,6 +640,7 @@ public class MainActivity extends Activity {
                     buglist.get(i).update();
                 }
                 showBug();
+                //step.start();
 
                 handler.post(new Runnable() {
                     public void run() {
@@ -630,7 +685,7 @@ public class MainActivity extends Activity {
         initializeTimerTaskSpider();
 
         //schedule the timer, after the first 5000ms the TimerTask will run every 10000ms
-        timerSpider.schedule(timerTaskSpider, 0, 300); //
+        timerSpider.schedule(timerTaskSpider, 0, 400); //
     }
 
     public void initializeTimerTaskSpider() {
@@ -647,4 +702,82 @@ public class MainActivity extends Activity {
     public static String getHost_url() {
         return host_url;
     }
+
+    public void ring1() {
+        try {
+
+            if (ringCount < 612 && powerup == false) {
+
+                ringCount = ringCount + 10;
+                if (ringCount == 612) {
+                    ringCount = 613; //così coloro anche l'ultimo led poverino
+                    powerup = true;
+                    P_Up.setEnabled(true);
+                    String myPassedColor = "#ADFF2F";
+                    int color = Color.parseColor(myPassedColor);
+                    P_Up.setBackgroundColor(color);
+
+                }
+
+            }
+        } catch (Exception e) {
+//            e.printStackTrace();
+        }
+
+    }
+
+
+
+
+
+
+    @OnClick(R.id.P_Up)
+    void boom () {
+        //onclick sul fungo
+
+
+        try {
+
+            if (powerup) {
+
+                // final MediaPlayer bang = MediaPlayer.create(this,R.raw.boom);
+                // bang.start();
+                JSONArray pixels_array = preparePixelsArray();
+
+                for (int i = 522; i < 612; i++) {
+                    ((JSONObject) pixels_array.get(i)).put("r", (int) (255.0f));
+                    ((JSONObject) pixels_array.get(i)).put("g", (int) (0.0f));
+                    ((JSONObject) pixels_array.get(i)).put("b", (int) (0.0f));
+                }
+                for (int i = 613; i < 790; i++) {
+                    ((JSONObject) pixels_array.get(i)).put("r", (int) (255.0f));
+                    ((JSONObject) pixels_array.get(i)).put("g", (int) (0.0f));
+                    ((JSONObject) pixels_array.get(i)).put("b", (int) (0.0f));
+                }
+                for (int i = 791; i < 1071; i++) {
+                    ((JSONObject) pixels_array.get(i)).put("r", (int) (255.0f));
+                    ((JSONObject) pixels_array.get(i)).put("g", (int) (0.0f));
+                    ((JSONObject) pixels_array.get(i)).put("b", (int) (0.0f));
+                }
+                powerup = false;
+                ringCount = 522;
+
+                buglist = new ArrayList<Bug>();
+                //handleNetworkRequest(NetworkThread.SET_PIXELS, pixels_array, 0, 0);
+                handleNetworkRequest(bugNetworkHandler, NetworkThread.SET_PIXELS, pixels_array, 0, 0);
+
+                P_Up.setEnabled(false);
+
+
+            }
+        } catch (Exception e) {
+//            e.printStackTrace();
+        }
+
+
+
+    }
+
+
+
 }
