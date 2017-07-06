@@ -1,7 +1,10 @@
 package it.polito.did.ragnatela;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.DialogFragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -11,6 +14,7 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -40,6 +44,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import me.angrybyte.circularslider.CircularSlider;
+
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 
 public class MainActivity extends Activity {
 
@@ -203,26 +210,48 @@ public class MainActivity extends Activity {
             }
         });
 
+
+
         pauseGame();
+
     }
 
     private void pauseGame(){
-
         pause = (ImageButton)findViewById(R.id.pauseButton);
         pause.setOnClickListener(new View.OnClickListener()
         {
             public void onClick (View v){
-                Intent intent = new Intent(getApplicationContext(), MenuActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                startActivity(intent);
-                if(MenuActivity.sharedPref.getBoolean("MUSIC", true)){
-                    MenuActivity.resourcePlayer = MediaPlayer.create(getApplicationContext(),R.raw.opening);
-                    MenuActivity.resourcePlayer.start();
-                    MenuActivity.resourcePlayer.setLooping(true);
-                }
+//                Intent intent = new Intent(getApplicationContext(), MenuActivity.class);
+//                intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+//                startActivity(intent);
+//                if(MenuActivity.sharedPref.getBoolean("MUSIC", true)){
+//                    MenuActivity.resourcePlayer = MediaPlayer.create(getApplicationContext(),R.raw.opening);
+//                    MenuActivity.resourcePlayer.start();
+//                    MenuActivity.resourcePlayer.setLooping(true);
+//                }
+                timer.cancel();
+                timerBug.cancel();
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setMessage("GAME PAUSED")
+                        .setPositiveButton("Resume", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // Resume
+                                startTimer();
+                                startTimerBug();
+                            }
+                        })
+                        .setNegativeButton("Quit", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // User cancelled the dialog
+                                MainActivity.this.finish();
+                            }
+                        });
+                // Create the AlertDialog object and return it
+                AlertDialog pauseDialogFragment = builder.create();
+                pauseDialogFragment.show();
+
             }
         });
-
     }
 
     public void startHandlerThread() {
