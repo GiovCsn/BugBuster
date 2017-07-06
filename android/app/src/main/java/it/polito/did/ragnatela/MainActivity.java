@@ -641,6 +641,28 @@ public class MainActivity extends Activity {
                 // final MediaPlayer hurt = MediaPlayer.create(this,R.raw.hit);
                 //hurt.start();
                 ragno.hit();
+                if(ragno.getLifebar() <= 0) {
+                    Handler mainHandler = new Handler(MainActivity.this.getMainLooper());
+                    Runnable myRunnable = new Runnable() {
+                        @Override
+                        public void run() {
+                            timer.cancel();
+                            timerBug.cancel();
+                            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                            builder.setMessage("GAME OVER")
+                                    .setPositiveButton("Quit", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            MainActivity.this.finish();
+                                        }
+                                    });
+                            // Create the AlertDialog object and return it
+                            AlertDialog gameOverDialogFragment = builder.create();
+                            gameOverDialogFragment.show();
+                        } // This is your code
+                    };
+                    mainHandler.post(myRunnable);
+
+                }
             }
         }
     }
